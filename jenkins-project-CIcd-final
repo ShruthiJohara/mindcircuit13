@@ -1,0 +1,90 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Repo from Github') {
+            steps {
+                echo 'Cloning from Github'
+                git branch: 'main', url: 'https://github.com/ShruthiJohara/mindcircuit13.git'
+                   }
+        }
+
+
+        stage('sonar') {
+            steps {
+                echo 'code quality test'
+             sh ''' mvn sonar:sonar \\
+                      -Dsonar.host.url=http://100.26.171.219:9000/ \\
+                      -Dsonar.login=squ_ae32653428c766a5ba5e84d16362c79793d52dc6'''
+                   }
+        }
+
+        stage('Build artifact') {
+            steps {
+                echo 'build an artifact'
+               sh 'mvn clean package'
+                   }
+        }
+stage('Parallel Stages') {
+            parallel {
+  stage('server') {
+            steps {
+                echo 'deploy an artifact'
+               deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://100.26.171.219:8082/')], contextPath: 'Mindcircuit', war: '**/*.war'
+                   }
+        }
+
+ stage('docker image') {
+            steps {
+                echo 'building an image from artifact'
+               sh '''docker build -t shruthij/shruthij1510:${BUILD_NUMBER} .'''
+                   }
+        }
+            }
+}
+
+stage('Push to Dockerhub') {
+            steps {
+			 script {
+			withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')])  
+			{
+            sh 'docker login -u shruthij.1510@gmail.com -p ${dockerhub}'
+			
+			 }
+			   sh 'docker push shruthij/shruthij1510:${BUILD_NUMBER}'
+			   
+           
+				}
+				
+            }
+        }
+
+
+ stage('Update Deployment File') {
+		
+		 environment {
+            GIT_REPO_NAME = "mindcircuit13"
+            GIT_USER_NAME = "ShruthiJohara"
+        }
+		
+            steps {
+                echo 'Update Deployment File'
+				withCredentials([string(credentialsId: 'githubtoken', variable: 'githubtoken')]) 
+				{
+                  sh '''
+                    git config user.email "shruthij.1510@gmail.com"
+                    git config user.name "Shruthi"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i "s/shruthij1510:.*/shruthij1510:${BUILD_NUMBER}/g" deploymentfiles/deployment.yml
+                    git add .
+                    
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+
+                    git push https://${githubtoken}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+				  
+                 }
+				
+            }
+        }
+    }
