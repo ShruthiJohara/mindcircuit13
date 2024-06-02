@@ -42,15 +42,15 @@ pipeline {
             
 
 
-stage('Push to Dockerhub') {
+  stage('Push to Dockerhub') {
             steps {
 			 script {
-			withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')])
+			withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) 
 			{
             sh 'docker login -u shruthij.1510@gmail.com -p ${dockerhub}'
 			
 			 }
-			   sh 'docker push shruthij/shruthij1510:${BUILD_NUMBER}'
+			   sh 'docker push shruthij1510/shruthij:${BUILD_NUMBER}'
 			   
            
 				}
