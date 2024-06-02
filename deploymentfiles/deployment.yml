@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: mc-app
-        image: shruthij/shruthij1510:20
+        image: shruthij/shruthij1510:xyz
         ports:
         - containerPort: 8080
 
