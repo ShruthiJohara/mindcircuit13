@@ -50,7 +50,7 @@ pipeline {
             sh 'docker login -u shruthij.1510@gmail.com -p ${dockerhub}'
 			
 			 }
-			   sh 'docker push shruthij1510/shruthij:${BUILD_NUMBER}'
+			   sh 'docker push shruthij/shruthij1510:${BUILD_NUMBER}'
 			   
            
 				}
