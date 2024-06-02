@@ -14,8 +14,8 @@ pipeline {
             steps {
                 echo 'code quality test'
              sh ''' mvn sonar:sonar \\
-                      -Dsonar.host.url=http://100.26.171.219:9000/ \\
-                      -Dsonar.login=squ_ae32653428c766a5ba5e84d16362c79793d52dc6'''
+                      -Dsonar.host.url=http://54.208.164.51:9000/ \\
+                      -Dsonar.login=squ_60ca8497feac6d543d755d998ba5252c514e9cb8'''
                    }
         }
 
@@ -30,7 +30,7 @@ stage('Parallel Stages') {
   stage('server') {
             steps {
                 echo 'deploy an artifact'
-               deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://100.26.171.219:8082/')], contextPath: 'Mindcircuit', war: '**/*.war'
+               deploy adapters: [tomcat9(credentialsId: 'b0115684-0a3d-4fab-8ab7-629e212d299e', path: '', url: 'http://54.208.164.51:8082/')], contextPath: 'Mindcircuit', war: '**/*.war'
                    }
         }
 
