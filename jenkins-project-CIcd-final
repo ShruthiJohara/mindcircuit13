@@ -15,7 +15,7 @@ pipeline {
                 echo 'code quality test'
              sh ''' mvn sonar:sonar \\
                       -Dsonar.host.url=http://54.208.164.51:9000/ \\
-                      -Dsonar.login=squ_60ca8497feac6d543d755d998ba5252c514e9cb8'''
+                      -Dsonar.login=squ_643109fb1bd11d32c063ae606b672ead6aca0e58'''
                    }
         }
 
