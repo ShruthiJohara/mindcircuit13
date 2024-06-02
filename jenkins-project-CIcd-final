@@ -26,6 +26,8 @@ pipeline {
                    }
         }
 
+stage('Parallel Stages') {
+            parallel {
   stage('server') {
             steps {
                 echo 'deploy an artifact'
@@ -39,7 +41,9 @@ pipeline {
                sh '''docker build -t shruthij/shruthij1510:${BUILD_NUMBER} .'''
                    }
         }
-            
+
+   }
+}
 
 
   stage('Push to Dockerhub') {
